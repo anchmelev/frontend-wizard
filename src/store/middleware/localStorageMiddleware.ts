@@ -1,19 +1,30 @@
 import { Middleware } from '@reduxjs/toolkit';
-import { actions } from '../slices/rootReducer';
 import type { RootState } from '../store';
+import isEqual from 'lodash/isEqual';
+import { actions } from '../slices/rootReducer';
+import { doCreateSurveyAnswer } from '../slices/surveyAnswerSlice/surveyAnswerSlice';
+import { persistSurveyConfigIdToEditing } from '@app/services/localStorage.service';
 
 export const localStorageMiddleware: Middleware = (store) => (next) => (action) => {
+  const relevantActions = new Set([
+    actions.surveyAnswer.takeToEdit.type,
+    actions.surveyAnswer.upsertEditingStep.type,
+    doCreateSurveyAnswer.fulfilled.type,
+  ]);
+
+  if (!relevantActions.has(action.type)) {
+    return next(action);
+  }
+
+  const prevEditingMap = (store.getState() as RootState).surveyAnswer.surveyConfigIdToEditing;
+
   const result = next(action);
 
-  // if (action.type === actions.character.updateCharacter.type || action.type === actions.character.resetCharacter.type) {
-  //   const state = store.getState() as RootState;
-  //   const editedById = state.character.editedById;
-  //   try {
-  //     localStorage.setItem(EDITED_CHARACTERS_LS_KEY, JSON.stringify(editedById));
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // }
+  const currentEditingMap = (store.getState() as RootState).surveyAnswer.surveyConfigIdToEditing;
+
+  if (!isEqual(prevEditingMap, currentEditingMap)) {
+    persistSurveyConfigIdToEditing(currentEditingMap);
+  }
 
   return result;
 };

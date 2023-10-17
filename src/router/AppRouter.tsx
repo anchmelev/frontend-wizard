@@ -3,26 +3,36 @@ import { Route, Navigate, createBrowserRouter, createRoutesFromElements, RouterP
 import { MainLayout } from '@app/components/MainLayout/MainLayout';
 import { withLoading } from './withLoading.hoc';
 import { Page } from './Page';
+import { RequireAuth } from './RequireAuth';
 
-const Error404Page = React.lazy(() => import('@app/pages/Error404Page'));
-const QuestionnairesPage = React.lazy(() => import('@app/pages/QuestionnairesPage'));
-const QuestionnaireViewPage = React.lazy(() => import('@app/pages/QuestionnaireViewPage'));
-const QuestionnaireEditPage = React.lazy(() => import('@app/pages/QuestionnaireEditPage'));
+const error404PagePromise = import('@app/pages/Error404Page');
+const surveysPagePromise = import('@app/pages/SurveysPage');
+const surveyViewPagePromise = import('@app/pages/SurveyViewPage');
+const surveyEditPagePromise = import('@app/pages/SurveyEditPage');
+const surveyAddPagePromise = import('@app/pages/SurveyAddPage');
 
-const Error404 = withLoading(Error404Page);
-const Questionnaires = withLoading(QuestionnairesPage);
-const QuestionnaireView = withLoading(QuestionnaireViewPage);
-const QuestionnaireEdit = withLoading(QuestionnaireEditPage);
+const Error404Page = withLoading(React.lazy(() => error404PagePromise));
+const SurveysPage = withLoading(React.lazy(() => surveysPagePromise));
+const SurveyViewPage = withLoading(React.lazy(() => surveyViewPagePromise));
+const SurveyEditPage = withLoading(React.lazy(() => surveyEditPagePromise));
+const SurveyAddPage = withLoading(React.lazy(() => surveyAddPagePromise));
 
 export const AppRouter: React.FC = () => {
+  const protectedLayout = (
+    <RequireAuth>
+      <MainLayout />
+    </RequireAuth>
+  );
+
   const router = createBrowserRouter(
     createRoutesFromElements(
       <>
-        <Route path={Page.home} element={<MainLayout />}>
-          <Route index element={<Questionnaires />} />
-          <Route path={`${Page.questionnaireView}/:id`} element={<QuestionnaireView />} />
-          <Route path={`${Page.questionnaireEdit}/:id`} element={<QuestionnaireEdit />} />
-          <Route path={Page.error404} element={<Error404 />} />
+        <Route path={Page.home} element={protectedLayout}>
+          <Route index element={<SurveysPage />} />
+          <Route path={`${Page.surveyView}/:surveyAnswerId`} element={<SurveyViewPage />} />
+          <Route path={`${Page.surveyEdit}/:surveyConfigId/:surveyAnswerId`} element={<SurveyEditPage />} />
+          <Route path={`${Page.surveyAdd}/:surveyConfigId`} element={<SurveyAddPage />} />
+          <Route path={Page.error404} element={<Error404Page />} />
         </Route>
         <Route path="*" element={<Navigate replace to={Page.error404} />} />
       </>,

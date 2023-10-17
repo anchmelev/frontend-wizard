@@ -1,12 +1,21 @@
-import { questionnaireConfigSlice } from './questionnaireConfigSlice/questionnaireConfigSlice';
-import { questionnaireResponseSlice } from './questionnaireResponseSlice/questionnaireResponseSlice';
+import { surveyConfigSelectors } from './surveyConfigSlice/surveyConfigSelectors';
+import { surveyConfigSlice } from './surveyConfigSlice/surveyConfigSlice';
+import { surveyAnswerSelectors } from './surveyAnswerSlice/surveyAnswerSelectors';
+import { surveyAnswerSlice } from './surveyAnswerSlice/surveyAnswerSlice';
+import { authSlice } from './authSlice/authSlice';
 
 export const rootReducer = {
-  questionnaireConfig: questionnaireConfigSlice.reducer,
-  questionnaireResponse: questionnaireResponseSlice.reducer,
+  surveyConfig: surveyConfigSlice.reducer,
+  surveyAnswer: surveyAnswerSlice.reducer,
+  auth: authSlice.reducer,
 };
 
 export const actions = {
-  questionnaireConfig: questionnaireConfigSlice.actions,
-  questionnaireResponse: questionnaireResponseSlice.actions,
+  surveyConfig: surveyConfigSlice.actions,
+  surveyAnswer: surveyAnswerSlice.actions,
+};
+
+export const selectors = {
+  surveyConfig: surveyConfigSelectors,
+  surveyAnswer: surveyAnswerSelectors,
 };

@@ -3,6 +3,10 @@ export interface ListResponseDto<T> {
   data: T[];
 }
 
+export interface ItemResponseDto<T> {
+  data: T;
+}
+
 export class ApiError<T> extends Error {
   options?: T;
 

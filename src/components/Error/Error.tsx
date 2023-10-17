@@ -17,7 +17,7 @@ export const Error: React.FC<ErrorProps> = ({ img, msg }) => {
       <S.ContentWrapper>
         <S.Title>Oops!</S.Title>
         <S.Text>{msg}</S.Text>
-        <Link to={Page.home}>
+        <Link to={Page.home} replace={true}>
           <Button type="primary" icon={<ArrowLeftOutlined />}>
             Return to Home
           </Button>

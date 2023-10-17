@@ -1,6 +1,7 @@
 export enum Page {
   home = '/',
-  questionnaireView = '/questionnaire-view',
-  questionnaireEdit = '/questionnaire-edit',
+  surveyView = '/survey-view',
+  surveyEdit = '/survey-edit',
+  surveyAdd = '/survey-add',
   error404 = '/404',
 }
